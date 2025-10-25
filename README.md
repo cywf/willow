@@ -2,6 +2,12 @@
 
 [//]:"inspired-by-Zillow" 
 
+## 🎯 Live Demo
+
+**Demo Site:** https://cywf.github.io/willow
+
+The demo site runs in demo mode showing sample properties. To interact with the blockchain features, install MetaMask and connect to a local Hardhat network.
+
 ## Technology Stack & Tools
 
 - Solidity (Writing Smart Contracts & Tests)
@@ -12,6 +18,7 @@
 
 ## Requirements For Initial Setup
 - Install [NodeJS](https://nodejs.org/en/)
+- (Optional) Install [MetaMask](https://metamask.io/) browser extension for blockchain interaction
 
 ## Setting Up
 ### 1. Clone/Download the Repository
@@ -31,3 +38,22 @@ In a separate terminal execute:
 
 ### 7. Start frontend
 `$ npm run start`
+
+## Deployment
+
+The site is automatically deployed to GitHub Pages when changes are pushed to the main branch. The demo mode allows users to view the application without needing MetaMask installed.
+
+### Manual Deployment
+To manually deploy:
+```bash
+npm run build
+npm run deploy
+```
+
+## Features
+
+- **Demo Mode**: Automatically detects if MetaMask is not available and shows demo data
+- **Blockchain Integration**: Connect with MetaMask to interact with real smart contracts
+- **Real Estate NFTs**: Properties are represented as ERC-721 tokens
+- **Escrow System**: Secure purchase process with buyer, seller, inspector, and lender roles
+- **Responsive Design**: Works on desktop and mobile devices
