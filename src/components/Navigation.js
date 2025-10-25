@@ -3,17 +3,26 @@ import logo from '../assets/logo.svg';
 
 const Navigation = ({ account, setAccount }) => {
     const connectHandler = async () => {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const account = ethers.utils.getAddress(accounts[0])
-        setAccount(account);
+        if (!window.ethereum) {
+            alert('Please install MetaMask to connect your wallet!');
+            return;
+        }
+        
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = ethers.utils.getAddress(accounts[0])
+            setAccount(account);
+        } catch (error) {
+            console.error('Error connecting wallet:', error);
+        }
     }
 
     return (
         <nav>
             <ul className='nav__links'>
-                <li><a href="#">Buy</a></li>
-                <li><a href="#">Rent</a></li>
-                <li><a href="#">Sell</a></li>
+                <li><a href="/#">Buy</a></li>
+                <li><a href="/#">Rent</a></li>
+                <li><a href="/#">Sell</a></li>
             </ul>
 
             <div className='nav__brand'>

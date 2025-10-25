@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
 import close from '../assets/close.svg';
@@ -9,7 +8,6 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     const [hasInspected, setHasInspected] = useState(false)
     const [hasSold, setHasSold] = useState(false)
 
-    const [buyer, setBuyer] = useState(null)
     const [lender, setLender] = useState(null)
     const [inspector, setInspector] = useState(null)
     const [seller, setSeller] = useState(null)
@@ -17,10 +15,11 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     const [owner, setOwner] = useState(null)
 
     const fetchDetails = async () => {
+        if (!escrow) return; // Skip if in demo mode
+        
         // -- Buyer
 
         const buyer = await escrow.buyer(home.id)
-        setBuyer(buyer)
 
         const hasBought = await escrow.approval(home.id, buyer)
         setHasBought(hasBought)
@@ -51,6 +50,8 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     }
 
     const fetchOwner = async () => {
+        if (!escrow) return; // Skip if in demo mode
+        
         if (await escrow.isListed(home.id)) return
 
         const owner = await escrow.buyer(home.id)
@@ -58,6 +59,11 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     }
 
     const buyHandler = async () => {
+        if (!escrow || !provider) {
+            alert('Please connect MetaMask to interact with the blockchain');
+            return;
+        }
+        
         const escrowAmount = await escrow.escrowAmount(home.id)
         const signer = await provider.getSigner()
 
@@ -73,6 +79,11 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     }
 
     const inspectHandler = async () => {
+        if (!escrow || !provider) {
+            alert('Please connect MetaMask to interact with the blockchain');
+            return;
+        }
+        
         const signer = await provider.getSigner()
 
         // Inspector updates status
@@ -83,6 +94,11 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     }
 
     const lendHandler = async () => {
+        if (!escrow || !provider) {
+            alert('Please connect MetaMask to interact with the blockchain');
+            return;
+        }
+        
         const signer = await provider.getSigner()
 
         // Lender approves...
@@ -97,6 +113,11 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     }
 
     const sellHandler = async () => {
+        if (!escrow || !provider) {
+            alert('Please connect MetaMask to interact with the blockchain');
+            return;
+        }
+        
         const signer = await provider.getSigner()
 
         // Seller approves...
@@ -113,6 +134,7 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
     useEffect(() => {
         fetchDetails()
         fetchOwner()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasSold])
 
     return (
