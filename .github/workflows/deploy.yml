@@ -1,5 +1,10 @@
 name: Deploy to GitHub Pages
 
+# Prerequisites:
+# 1. GitHub Pages must be enabled in repository Settings > Pages
+# 2. Source must be set to "GitHub Actions" 
+# 3. The repository homepage in package.json must match the GitHub Pages URL
+
 on:
   push:
     branches:
