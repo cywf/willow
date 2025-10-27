@@ -43,6 +43,8 @@ In a separate terminal execute:
 
 The site is automatically deployed to GitHub Pages when changes are pushed to the main branch. The demo mode allows users to view the application without needing MetaMask installed.
 
+**Important:** For the automated deployment to work, GitHub Pages must be enabled in repository Settings > Pages with source set to "GitHub Actions". See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for detailed setup instructions.
+
 ### Manual Deployment
 To manually deploy:
 ```bash
