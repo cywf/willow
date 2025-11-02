@@ -82,7 +82,7 @@ const baseUrl = import.meta.env.BASE_URL || '/willow';
     
     try {
       // Try to load the app
-      const appPath = `${baseUrl}/app/index.html`;
+      const appPath = `${baseUrl}/dapp/index.html`;
       const response = await fetch(appPath, { method: 'HEAD' });
       
       if (response.ok) {

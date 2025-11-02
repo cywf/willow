@@ -79,8 +79,8 @@ The site uses a multi-stage deployment process:
 
 The React DApp is built separately and embedded in the Astro site at the `/app` route:
 - CI builds the React app: `npm ci && npm run build` 
-- Output is copied to `site/public/app/`
-- The `/app` page loads the DApp in an iframe or via direct rendering
+- Output is copied to `site/public/dapp/`
+- The `/app` page loads the DApp from `/dapp/index.html` in an iframe
 - Demo mode is automatically activated when MetaMask is not detected
 
 ### Data Snapshots

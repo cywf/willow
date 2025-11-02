@@ -50,9 +50,9 @@ jobs:
       - name: Copy React build to site
         if: steps.build-react.outputs.app_out != ''
         run: |
-          mkdir -p site/public/app
-          cp -r ${{ steps.build-react.outputs.app_out }}/* site/public/app/
-          echo "✓ React app copied to site/public/app/"
+          mkdir -p site/public/dapp
+          cp -r ${{ steps.build-react.outputs.app_out }}/* site/public/dapp/
+          echo "✓ React app copied to site/public/dapp/"
 
       # Fetch repository data
       - name: Install site dependencies
