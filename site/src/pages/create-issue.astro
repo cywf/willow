@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const repoUrl = 'https://github.com/cywf/willow';
+const issueTemplateUrl = `${repoUrl}/issues/new/choose`;
+
+// Prefilled issue URLs
+const bugUrl = `${repoUrl}/issues/new?template=bug_report.md&labels=bug`;
+const featureUrl = `${repoUrl}/issues/new?template=feature_request.md&labels=enhancement`;
+const docsUrl = `${repoUrl}/issues/new?template=documentation.md&labels=documentation`;
+---
+
+<Layout title="Create Issue">
+  <div class="space-y-8">
+    <div>
+      <h1 class="text-4xl font-bold mb-2">Create an Issue</h1>
+      <p class="text-base-content/70">
+        Report a bug, request a feature, or suggest improvements
+      </p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Bug Report -->
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-error">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            Bug Report
+          </h2>
+          <p class="text-sm text-base-content/70">
+            Report a problem or unexpected behavior in the application
+          </p>
+          <ul class="text-sm space-y-1 mt-2">
+            <li>• Describe the issue clearly</li>
+            <li>• Include steps to reproduce</li>
+            <li>• Share error messages</li>
+            <li>• Mention your environment</li>
+          </ul>
+          <div class="card-actions justify-end mt-4">
+            <a href={bugUrl} target="_blank" class="btn btn-error btn-sm">
+              Report Bug
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Request -->
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-success">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            Feature Request
+          </h2>
+          <p class="text-sm text-base-content/70">
+            Suggest new features or improvements to existing functionality
+          </p>
+          <ul class="text-sm space-y-1 mt-2">
+            <li>• Describe the feature</li>
+            <li>• Explain the use case</li>
+            <li>• Discuss alternatives</li>
+            <li>• Consider impact</li>
+          </ul>
+          <div class="card-actions justify-end mt-4">
+            <a href={featureUrl} target="_blank" class="btn btn-success btn-sm">
+              Request Feature
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documentation -->
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-info">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Documentation
+          </h2>
+          <p class="text-sm text-base-content/70">
+            Report documentation issues or suggest improvements
+          </p>
+          <ul class="text-sm space-y-1 mt-2">
+            <li>• Point out errors</li>
+            <li>• Suggest clarifications</li>
+            <li>• Request new guides</li>
+            <li>• Improve examples</li>
+          </ul>
+          <div class="card-actions justify-end mt-4">
+            <a href={docsUrl} target="_blank" class="btn btn-info btn-sm">
+              Improve Docs
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- General Issue Creation -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Other Issues
+        </h2>
+        <p class="text-base-content/70">
+          For other types of issues, use our issue template chooser
+        </p>
+        <div class="card-actions justify-end mt-4">
+          <a href={issueTemplateUrl} target="_blank" class="btn btn-primary">
+            Choose Template
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guidelines -->
+    <div class="alert alert-info">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">Before Creating an Issue</h3>
+        <ul class="text-sm space-y-1 mt-1">
+          <li>• Search existing issues to avoid duplicates</li>
+          <li>• Provide clear and detailed information</li>
+          <li>• Be respectful and constructive</li>
+          <li>• Follow the Code of Conduct</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href={`${repoUrl}/issues`} target="_blank" class="btn btn-outline">
+        View All Issues
+      </a>
+      <a href={`${repoUrl}/discussions`} target="_blank" class="btn btn-outline">
+        Browse Discussions
+      </a>
+      <a href={`${repoUrl}/blob/main/CONTRIBUTING.md`} target="_blank" class="btn btn-outline">
+        Contributing Guide
+      </a>
+    </div>
+  </div>
+</Layout>

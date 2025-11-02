@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/willow/static/css/main.9123dd53.css",
+    "main.js": "/willow/static/js/main.5b22a3dd.js",
+    "static/js/453.7ad64190.chunk.js": "/willow/static/js/453.7ad64190.chunk.js",
+    "static/media/houses.png": "/willow/static/media/houses.4d3bb237fb5a23c27d5a.png",
+    "static/media/logo.svg": "/willow/static/media/logo.d723edf07b3a4df9be9647ffbe504ad1.svg",
+    "index.html": "/willow/index.html",
+    "static/media/close.svg": "/willow/static/media/close.ae469738e479d31aa952364e12120ad2.svg",
+    "main.9123dd53.css.map": "/willow/static/css/main.9123dd53.css.map",
+    "main.5b22a3dd.js.map": "/willow/static/js/main.5b22a3dd.js.map",
+    "453.7ad64190.chunk.js.map": "/willow/static/js/453.7ad64190.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9123dd53.css",
+    "static/js/main.5b22a3dd.js"
+  ]
+}

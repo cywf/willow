@@ -1,0 +1,133 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MermaidViewer from '../components/MermaidViewer';
+import { readFile, readdir } from 'fs/promises';
+import { join } from 'path';
+
+// Try to find .mmd files in /mermaid directory or extract from README
+let diagrams: { name: string; content: string }[] = [];
+
+// Check for .mmd files in public/diagrams (will be populated by CI)
+try {
+  const diagramsPath = join(process.cwd(), 'public', 'diagrams');
+  const files = await readdir(diagramsPath).catch(() => []);
+  
+  for (const file of files) {
+    if (file.endsWith('.mmd')) {
+      const content = await readFile(join(diagramsPath, file), 'utf-8');
+      diagrams.push({
+        name: file.replace('.mmd', ''),
+        content: content.trim(),
+      });
+    }
+  }
+} catch (error) {
+  console.log('No .mmd files found in public/diagrams');
+}
+
+// If no .mmd files, try to extract from README
+if (diagrams.length === 0) {
+  try {
+    const readmePath = join(process.cwd(), '..', 'README.md');
+    const readme = await readFile(readmePath, 'utf-8');
+    
+    // Extract mermaid code blocks
+    const mermaidRegex = /```mermaid\n([\s\S]*?)```/g;
+    let match;
+    let index = 1;
+    
+    while ((match = mermaidRegex.exec(readme)) !== null) {
+      diagrams.push({
+        name: `Diagram ${index}`,
+        content: match[1].trim(),
+      });
+      index++;
+    }
+  } catch (error) {
+    console.log('Could not extract Mermaid from README');
+  }
+}
+
+// If still no diagrams, provide a sample
+if (diagrams.length === 0) {
+  diagrams = [
+    {
+      name: 'Sample Architecture',
+      content: `graph TD
+    A[User] -->|Connects| B[MetaMask]
+    B -->|Signs Transaction| C[Smart Contract]
+    C -->|Mints| D[NFT Property]
+    D -->|Stored on| E[Blockchain]
+    C -->|Escrow| F[Buyer/Seller/Inspector/Lender]
+    F -->|Completes| G[Transfer Ownership]`,
+    },
+    {
+      name: 'Sample Flow',
+      content: `sequenceDiagram
+    participant U as User
+    participant M as MetaMask
+    participant S as Smart Contract
+    participant B as Blockchain
+    
+    U->>M: Connect Wallet
+    M->>U: Wallet Connected
+    U->>S: Request Property
+    S->>B: Fetch NFT Data
+    B->>S: Return Data
+    S->>U: Display Property
+    U->>S: Purchase Request
+    S->>M: Sign Transaction
+    M->>S: Signed
+    S->>B: Execute Transfer
+    B->>U: Ownership Transferred`,
+    },
+  ];
+}
+---
+
+<Layout title="Visualizer">
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-4xl font-bold mb-2">Project Visualizer</h1>
+      <p class="text-base-content/70">
+        Interactive Mermaid diagrams showing project architecture and flows
+      </p>
+    </div>
+
+    <MermaidViewer diagrams={diagrams} client:load />
+
+    <div class="alert alert-info">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">About These Diagrams</h3>
+        <div class="text-sm">
+          Diagrams are rendered using Mermaid.js. They are extracted from .mmd files or Mermaid code blocks in the README.
+          You can download diagrams as SVG files using the download button.
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Creating Diagrams</h2>
+        <p className="text-sm text-base-content/70 mb-4">
+          To add your own diagrams, create .mmd files in the <code>/mermaid</code> directory or add Mermaid code blocks to your README:
+        </p>
+        <pre class="bg-base-300 p-4 rounded-lg overflow-x-auto text-sm">
+{`\`\`\`mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C[End]
+\`\`\`}`}
+        </pre>
+        <div class="mt-4">
+          <a href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" class="btn btn-sm btn-primary">
+            Learn Mermaid Syntax
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  
+  body {
+    @apply bg-base-100 text-base-content;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply absolute -top-12 left-4 bg-primary text-primary-content px-4 py-2 rounded-md focus:top-4 z-50 transition-all;
+  }
+  
+  .btn-custom {
+    @apply btn transition-all duration-200;
+  }
+}

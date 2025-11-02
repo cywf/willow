@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Development Board">
+  <div class="space-y-6">
+    <div class="flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h1 class="text-4xl font-bold mb-2">Development Board</h1>
+        <p class="text-base-content/70">
+          Track project progress and tasks
+        </p>
+      </div>
+      <a href="https://github.com/cywf/willow/projects" target="_blank" class="btn btn-primary">
+        View on GitHub
+      </a>
+    </div>
+
+    <!-- Loading State -->
+    <div id="board-loading" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {[1, 2, 3].map(() => (
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <div class="skeleton h-6 w-24 mb-4"></div>
+            <div class="space-y-2">
+              <div class="skeleton h-20 w-full"></div>
+              <div class="skeleton h-20 w-full"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Kanban Board -->
+    <div id="board-content" class="hidden">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- To Do Column -->
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h2 class="card-title text-warning">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              To Do
+              <span id="todo-count" class="badge badge-sm">0</span>
+            </h2>
+            <div id="todo-items" class="space-y-2 min-h-[200px]">
+              <!-- Items will be added here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h2 class="card-title text-info">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              In Progress
+              <span id="progress-count" class="badge badge-sm">0</span>
+            </h2>
+            <div id="progress-items" class="space-y-2 min-h-[200px]">
+              <!-- Items will be added here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h2 class="card-title text-success">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Done
+              <span id="done-count" class="badge badge-sm">0</span>
+            </h2>
+            <div id="done-items" class="space-y-2 min-h-[200px]">
+              <!-- Items will be added here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="board-error" class="hidden alert alert-warning">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">Development Board Not Available</h3>
+        <div class="text-sm">
+          Project data could not be loaded. Using issue fallback...
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  interface ProjectItem {
+    title: string;
+    url: string;
+    status: string;
+    labels: string[];
+    assignees: string[];
+    number?: number;
+  }
+
+  async function loadBoard() {
+    const loading = document.getElementById('board-loading');
+    const content = document.getElementById('board-content');
+    const error = document.getElementById('board-error');
+
+    try {
+      const baseUrl = import.meta.env.BASE_URL || '/willow';
+      const response = await fetch(`${baseUrl}/data/projects.json`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch project data');
+      }
+
+      const items: ProjectItem[] = await response.json();
+      
+      if (loading) loading.classList.add('hidden');
+      if (content) content.classList.remove('hidden');
+      
+      renderBoard(items);
+    } catch (err) {
+      console.error('Error loading board:', err);
+      if (loading) loading.classList.add('hidden');
+      if (error) error.classList.remove('hidden');
+      if (content) content.classList.remove('hidden');
+      
+      // Try to render from fallback
+      renderBoard([]);
+    }
+  }
+
+  function renderBoard(items: ProjectItem[]) {
+    const todoContainer = document.getElementById('todo-items');
+    const progressContainer = document.getElementById('progress-items');
+    const doneContainer = document.getElementById('done-items');
+    
+    if (!todoContainer || !progressContainer || !doneContainer) return;
+
+    // Categorize items
+    const todo = items.filter(i => 
+      i.status.toLowerCase().includes('todo') || 
+      i.status.toLowerCase().includes('backlog') ||
+      i.labels.some(l => l.toLowerCase().includes('todo'))
+    );
+    
+    const inProgress = items.filter(i => 
+      i.status.toLowerCase().includes('progress') || 
+      i.status.toLowerCase().includes('doing') ||
+      i.labels.some(l => l.toLowerCase().includes('progress') || l.toLowerCase().includes('doing'))
+    );
+    
+    const done = items.filter(i => 
+      i.status.toLowerCase().includes('done') || 
+      i.status.toLowerCase().includes('complete') ||
+      i.labels.some(l => l.toLowerCase().includes('done') || l.toLowerCase().includes('complete'))
+    );
+
+    // Update counts
+    const todoCount = document.getElementById('todo-count');
+    const progressCount = document.getElementById('progress-count');
+    const doneCount = document.getElementById('done-count');
+    
+    if (todoCount) todoCount.textContent = todo.length.toString();
+    if (progressCount) progressCount.textContent = inProgress.length.toString();
+    if (doneCount) doneCount.textContent = done.length.toString();
+
+    // Render items
+    todoContainer.innerHTML = renderItems(todo) || '<div class="text-sm text-base-content/50 p-4 text-center">No items</div>';
+    progressContainer.innerHTML = renderItems(inProgress) || '<div class="text-sm text-base-content/50 p-4 text-center">No items</div>';
+    doneContainer.innerHTML = renderItems(done) || '<div class="text-sm text-base-content/50 p-4 text-center">No items</div>';
+  }
+
+  function renderItems(items: ProjectItem[]): string {
+    return items.map(item => `
+      <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
+        <div class="card-body p-4">
+          <h3 class="font-semibold text-sm mb-2">
+            <a href="${item.url}" target="_blank" class="link link-hover">
+              ${item.number ? `#${item.number} ` : ''}${item.title}
+            </a>
+          </h3>
+          ${item.labels.length > 0 ? `
+            <div class="flex flex-wrap gap-1 mb-2">
+              ${item.labels.slice(0, 3).map(label => `
+                <span class="badge badge-xs">${label}</span>
+              `).join('')}
+              ${item.labels.length > 3 ? `<span class="badge badge-xs">+${item.labels.length - 3}</span>` : ''}
+            </div>
+          ` : ''}
+          ${item.assignees.length > 0 ? `
+            <div class="flex items-center gap-1 text-xs text-base-content/70">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              ${item.assignees.join(', ')}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Initialize
+  loadBoard();
+</script>
