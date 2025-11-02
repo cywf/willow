@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/willow';
+---
+
+<Layout title="DApp">
+  <div class="space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-4xl font-bold">Willow DApp</h1>
+    </div>
+
+    <!-- Wallet Detection Banner -->
+    <div id="wallet-banner" class="hidden">
+      <!-- Will be populated by client-side script -->
+    </div>
+
+    <!-- App Container -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body p-0">
+        <div id="app-container" class="w-full min-h-[600px]">
+          <!-- Loading state -->
+          <div id="app-loading" class="flex flex-col items-center justify-center p-12 space-y-4">
+            <span class="loading loading-spinner loading-lg"></span>
+            <p class="text-lg">Loading DApp...</p>
+          </div>
+          
+          <!-- Empty state if no build -->
+          <div id="app-empty" class="hidden flex-col items-center justify-center p-12 space-y-4 text-center">
+            <svg class="w-24 h-24 text-base-content/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <h2 class="text-2xl font-bold">DApp Build Not Found</h2>
+            <p class="text-base-content/70 max-w-md">
+              The React DApp build is not available. To run the app locally:
+            </p>
+            <div class="mockup-code text-left">
+              <pre data-prefix="$"><code>cd /path/to/willow</code></pre>
+              <pre data-prefix="$"><code>npm install</code></pre>
+              <pre data-prefix="$"><code>npm run build</code></pre>
+              <pre data-prefix="$"><code>npm start</code></pre>
+            </div>
+            <a href="https://github.com/cywf/willow" target="_blank" class="btn btn-primary">
+              View on GitHub
+            </a>
+          </div>
+          
+          <!-- Iframe for the app -->
+          <iframe 
+            id="app-iframe" 
+            class="hidden w-full min-h-[600px] border-0"
+            title="Willow Real Estate DApp"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="alert alert-info">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">About This DApp</h3>
+        <div class="text-sm">
+          This decentralized application runs entirely in your browser. Connect with MetaMask to interact with the blockchain,
+          or use demo mode to explore the interface with sample data.
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ baseUrl }}>
+  // Check if app build exists and set up iframe or empty state
+  async function setupApp() {
+    const appLoading = document.getElementById('app-loading');
+    const appEmpty = document.getElementById('app-empty');
+    const appIframe = document.getElementById('app-iframe');
+    const walletBanner = document.getElementById('wallet-banner');
+    
+    try {
+      // Try to load the app
+      const appPath = `${baseUrl}/app/index.html`;
+      const response = await fetch(appPath, { method: 'HEAD' });
+      
+      if (response.ok) {
+        // App build exists, load it in iframe
+        appIframe.src = appPath;
+        appIframe.classList.remove('hidden');
+        appLoading.classList.add('hidden');
+        
+        // Show wallet banner
+        setupWalletBanner();
+      } else {
+        // App build doesn't exist
+        appEmpty.classList.remove('hidden');
+        appEmpty.classList.add('flex');
+        appLoading.classList.add('hidden');
+      }
+    } catch (error) {
+      console.error('Error loading app:', error);
+      appEmpty.classList.remove('hidden');
+      appEmpty.classList.add('flex');
+      appLoading.classList.add('hidden');
+    }
+  }
+  
+  function setupWalletBanner() {
+    const walletBanner = document.getElementById('wallet-banner');
+    const hasWallet = typeof window.ethereum !== 'undefined';
+    
+    if (!hasWallet) {
+      // Demo mode banner
+      walletBanner.innerHTML = `
+        <div class="alert alert-warning">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <div>
+            <h3 class="font-bold">Demo Mode Active</h3>
+            <div class="text-sm">MetaMask not detected. You're viewing sample properties. To interact with the blockchain, install <a href="https://metamask.io/" target="_blank" class="link">MetaMask</a>.</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="btn btn-sm btn-ghost">
+            Dismiss
+          </button>
+        </div>
+      `;
+    } else {
+      // Wallet available banner
+      walletBanner.innerHTML = `
+        <div class="alert alert-success">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h3 class="font-bold">Wallet Detected</h3>
+            <div class="text-sm">MetaMask is available. Click "Connect Wallet" in the app to interact with the blockchain. <strong>Always verify you're on the correct network before transactions.</strong></div>
+          </div>
+          <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="btn btn-sm btn-ghost">
+            Dismiss
+          </button>
+        </div>
+      `;
+    }
+    
+    walletBanner.classList.remove('hidden');
+  }
+  
+  // Initialize on page load
+  setupApp();
+</script>

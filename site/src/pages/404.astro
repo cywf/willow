@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const baseUrl = import.meta.env.BASE_URL || '/willow';
+---
+
+<Layout title="404 - Page Not Found">
+  <div class="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6">
+    <div class="text-9xl font-bold text-primary">404</div>
+    
+    <h1 class="text-4xl font-bold">Page Not Found</h1>
+    
+    <p class="text-xl text-base-content/70 max-w-md">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+
+    <div class="flex gap-4 flex-wrap justify-center">
+      <a href={`${baseUrl}/`} class="btn btn-primary">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Go Home
+      </a>
+      
+      <a href={`${baseUrl}/app`} class="btn btn-outline">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        Launch App
+      </a>
+      
+      <a href={`${baseUrl}/docs`} class="btn btn-outline">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Documentation
+      </a>
+    </div>
+
+    <!-- Helpful Links -->
+    <div class="mt-8">
+      <p class="text-sm text-base-content/60 mb-4">Popular pages:</p>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <a href={`${baseUrl}/statistics`} class="link link-hover">Statistics</a>
+        <span class="text-base-content/30">•</span>
+        <a href={`${baseUrl}/discussions`} class="link link-hover">Discussions</a>
+        <span class="text-base-content/30">•</span>
+        <a href={`${baseUrl}/development-board`} class="link link-hover">Dev Board</a>
+        <span class="text-base-content/30">•</span>
+        <a href={`${baseUrl}/visualizer`} class="link link-hover">Visualizer</a>
+      </div>
+    </div>
+  </div>
+</Layout>

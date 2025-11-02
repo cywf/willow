@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Charts from '../components/Charts';
+---
+
+<Layout title="Statistics">
+  <div class="space-y-8">
+    <div>
+      <h1 class="text-4xl font-bold mb-2">Repository Statistics</h1>
+      <p class="text-base-content/70">
+        Live statistics and analytics for the Willow repository
+      </p>
+    </div>
+
+    <Charts client:load />
+
+    <div class="alert alert-info">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">About These Statistics</h3>
+        <div class="text-sm">
+          Statistics are collected during the build process and may not reflect real-time data.
+          Data is refreshed on each deployment.
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
